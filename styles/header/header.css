@@ -1,0 +1,119 @@
+.header {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(230, 230, 230, 1);
+}
+
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header__search-input-container {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.header__search-region {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.header__search {
+  padding: 12px 0 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 22px;
+  width: 97%;
+}
+
+.header__region {
+  padding: 5px 44px 5px 20px;
+  height: 44px;
+  border: 1px solid #ccc;
+  border-radius: 22px;
+  flex: 1;
+  max-width: 320px;
+  position: relative;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  appearance:none;
+  background-image: url('img/arrow-down.svg');
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 15px);
+  background-position-y: 11px;
+  cursor: pointer;
+}
+
+.header__search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+}
+
+.header__search-submit {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  top: 22px;
+  right: -3px;
+}
+
+.header__search-submit::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  background-image: url("img/search-icon.svg");
+  background-size: cover;
+}
+
+@media screen and (max-width: 650px) {
+  .header__container {
+    flex-direction: column;
+  }
+
+  .header__search-region {
+    gap: 5px;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .header__region {
+    flex: auto;
+    width: 100%;
+    max-width: unset;
+  }
+
+  .header__search {
+    padding: 12px 0 12px 20px;
+    flex: auto;
+    border: 1px solid #ccc;
+    border-radius: 22px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .header__search-submit {
+    right: 5px;
+  }
+
+  .header__search-input-container {
+    flex: auto;
+    max-width: unset;
+    width: 100%;
+  }
+}

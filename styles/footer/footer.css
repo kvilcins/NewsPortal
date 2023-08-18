@@ -1,0 +1,29 @@
+.footer {
+  padding: 20px 0;
+  border-top: 1px solid rgba(230, 230, 230, 1);
+}
+
+.footer__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__logo {
+  font-weight: bold;
+}
+
+.footer__copyright {
+  font-size: 12px;
+  align-self: end;
+}
+
+.footer__social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.footer__social-icon {
+  text-decoration: none;
+  color: #333;
+}
