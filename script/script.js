@@ -121,12 +121,14 @@ const fetchNews = async () => {
   try {
     const response = await fetch(API_URL);
     const data = await response.json();
+    console.log('Fetched data:', data); // Проверьте полученные данные в консоли
     return data.articles;
   } catch (error) {
     console.error('Error fetching news:', error);
     return [];
   }
 }
+
 
 const fetchSearchResults = async (query) => {
   try {
