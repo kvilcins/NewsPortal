@@ -40,17 +40,15 @@
 }
 
 .main__news-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Задаем минимальную ширину элемента */
+  gap: 30px;
   margin-bottom: 20px;
 }
 
 .main__news-item {
-  width: calc(25% - 20px);
+  width: 100%;
   box-sizing: border-box;
-  padding: 10px;
 }
 
 .main__news-img-container {
@@ -80,7 +78,7 @@
 .main__news-description {
   font-size: 12px;
   margin-bottom: 10px;
-  height: 24px;
+  height: 27px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -93,16 +91,4 @@
   justify-content: space-between;
   font-size: 10px;
   color: rgba(142, 142, 142, 1);
-}
-
-@media screen and (max-width: 960px) {
-  .main__news-item {
-    width: calc(50% - 20px);
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .main__news-item {
-    width: 100%;
-  }
 }

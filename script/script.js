@@ -1,10 +1,14 @@
-'use strict';
-
-const API_KEY = 'd605bc3de02e443180194cb98b2f1bf7';
-let API_URL = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${API_KEY}`;
+import {dataJson} from "./json.js";
 
 const articlesPerPage = 16;
 let currentPage = 1;
+
+const searchInJsonData = (query) => {
+  return dataJson.articles.filter((article) =>
+    article.title && query &&
+    article.title.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 8);
+};
 
 const header = document.createElement("header");
 header.classList.add("header");
@@ -33,16 +37,14 @@ const searchInput = document.createElement("input");
 searchInput.type = "text";
 searchInput.id = "searchInput";
 searchInput.classList.add("header__search");
-searchInput.placeholder = "Я хочу узнать про...";
+searchInput.placeholder = "I'm searching...";
 
-searchInput.addEventListener('keydown', async (event) => {
-  if (event.key === 'Enter') {
+searchInput.addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
     const query = searchInput.value;
     if (query) {
-      const searchResults = await fetchSearchResults(query);
+      const searchResults = searchInJsonData(query);
       displaySearchResults(searchResults);
-
-      window.history.pushState({}, '', `?q=${encodeURIComponent(query)}`);
     }
   }
 });
@@ -60,6 +62,7 @@ regionSelect.id = "regionSelect";
 regionSelect.classList.add("header__region");
 
 const countries = [{ code: 'us', name: 'USA' }];
+
 countries.forEach(country => {
   const option = document.createElement("option");
   option.value = country.code;
@@ -67,13 +70,11 @@ countries.forEach(country => {
   regionSelect.appendChild(option);
 });
 
-searchSubmitButton.addEventListener('click', async () => {
+searchSubmitButton.addEventListener('click', () => {
   const query = searchInput.value;
   if (query) {
-    const searchResults = await fetchSearchResults(query);
+    const searchResults = searchInJsonData(query);
     displaySearchResults(searchResults);
-
-    window.history.pushState({}, '', `?q=${encodeURIComponent(query)}`);
   }
 });
 
@@ -100,7 +101,7 @@ mainContainer.classList.add("container", "main__container");
 
 const searchResultsTitle = document.createElement("div");
 searchResultsTitle.classList.add("main__search-result");
-searchResultsTitle.textContent = "Результаты поиска:";
+searchResultsTitle.textContent = "Search results:";
 searchResultsTitle.style.display = "none";
 
 const searchResultsContainer = document.createElement("div");
@@ -109,7 +110,7 @@ searchResultsContainer.style.display = "none";
 
 const mainTitle = document.createElement("h1");
 mainTitle.classList.add("main__title");
-mainTitle.textContent = "Свежие новости";
+mainTitle.textContent = "Fresh news";
 
 const newsGrid = document.createElement("div");
 newsGrid.classList.add("main__news-grid");
@@ -117,32 +118,8 @@ newsGrid.classList.add("main__news-grid");
 const paginationContainer = document.createElement("div");
 paginationContainer.classList.add("pagination");
 
-const fetchNews = async () => {
-  try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    console.log('Fetched data:', data); // Проверьте полученные данные в консоли
-    return data.articles;
-  } catch (error) {
-    console.error('Error fetching news:', error);
-    return [];
-  }
-}
-
-
-const fetchSearchResults = async (query) => {
-  try {
-    const response = await fetch(`https://newsapi.org/v2/everything?q=${query}&apiKey=${API_KEY}`);
-    const data = await response.json();
-    return data.articles.slice(0, 8);
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    return [];
-  }
-}
-
-const displaySearchResults = async (articles) => {
-  searchResultsContainer.innerHTML = '';
+const displaySearchResults = (articles) => {
+  searchResultsContainer.innerHTML = "";
 
   if (articles.length > 0) {
     searchResultsContainer.style.display = "";
@@ -154,13 +131,14 @@ const displaySearchResults = async (articles) => {
     }
 
     mainContainer.insertBefore(searchResultsTitle, searchResultsContainer);
-
     mainContainer.insertBefore(searchResultsContainer, mainTitle);
   } else {
-    searchResultsContainer.style.display = "none";
-    searchResultsTitle.style.display = "none";
+    searchResultsContainer.style.display = "";
+    searchResultsTitle.style.display = "";
+    searchResultsContainer.innerHTML = "Nothing was found";
   }
-}
+};
+
 
 const placeholderImageUrl = "styles/img-global/unsplash_xsGxhtAsfSA.png";
 
@@ -195,7 +173,7 @@ const createNewsItem = (article) => {
   newsItem.appendChild(newsMeta);
 
   return newsItem;
-}
+};
 
 const createPaginationButtons = (totalPages, articles) => {
   paginationContainer.innerHTML = '';
@@ -210,19 +188,19 @@ const createPaginationButtons = (totalPages, articles) => {
     pageButton.addEventListener('click', () => changePage(i, totalPages, articles));
     paginationContainer.appendChild(pageButton);
   }
-}
+};
 
 const displayNewsPage = (pageNumber, totalPages, articles) => {
   newsGrid.innerHTML = '';
 
-  const startIndex = (pageNumber -1) * articlesPerPage;
+  const startIndex = (pageNumber - 1) * articlesPerPage;
   const endIndex = startIndex + articlesPerPage;
 
   for (let i = startIndex; i < endIndex && i < articles.length; i++) {
     const newsItem = createNewsItem(articles[i]);
     newsGrid.appendChild(newsItem);
   }
-}
+};
 
 const changePage = (pageNumber, totalPages, articles) => {
   currentPage = pageNumber;
@@ -234,17 +212,24 @@ const changePage = (pageNumber, totalPages, articles) => {
   } else {
     window.history.pushState({}, '', `?page=${pageNumber}`);
   }
-}
+};
 
-const displayNews = async () => {
-  const articles = await fetchNews();
+const displayNews = () => {
+  const articles = dataJson.articles;
   const totalPages = Math.ceil(articles.length / articlesPerPage);
 
   displayNewsPage(currentPage, totalPages, articles);
   createPaginationButtons(totalPages, articles);
-}
+};
 
-displayNews().then(() => console.log('News displayed')).catch((error) => console.error(error));
+async function init() {
+  try {
+    await displayNews();
+    console.log('News displayed');
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 mainContainer.appendChild(searchResultsContainer);
 mainContainer.appendChild(mainTitle);
@@ -306,3 +291,7 @@ footerContainer.appendChild(copyright);
 footerContainer.appendChild(socialIcons);
 footer.appendChild(footerContainer);
 document.body.appendChild(footer);
+
+export {
+  init,
+}
