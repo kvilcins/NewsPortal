@@ -122,8 +122,8 @@ const displaySearchResults = (articles) => {
   searchResultsContainer.innerHTML = "";
 
   if (articles.length > 0) {
-    searchResultsContainer.style.display = "";
-    searchResultsTitle.style.display = "";
+    searchResultsContainer.style.display = "grid";
+    searchResultsTitle.style.display = "block";
 
     for (const article of articles) {
       const newsItem = createNewsItem(article);
@@ -133,12 +133,15 @@ const displaySearchResults = (articles) => {
     mainContainer.insertBefore(searchResultsTitle, searchResultsContainer);
     mainContainer.insertBefore(searchResultsContainer, mainTitle);
   } else {
-    searchResultsContainer.style.display = "";
-    searchResultsTitle.style.display = "";
+    searchResultsContainer.style.display = "block";
+    searchResultsTitle.style.display = "block";
+
+    mainContainer.insertBefore(searchResultsTitle, searchResultsContainer);
+    mainContainer.insertBefore(searchResultsContainer, mainTitle);
+
     searchResultsContainer.innerHTML = "Nothing was found";
   }
 };
-
 
 const placeholderImageUrl = "styles/img-global/unsplash_xsGxhtAsfSA.png";
 
